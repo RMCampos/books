@@ -2,30 +2,37 @@
 
 ## Current Focus
 
-**Phase 0 — Greenfield setup and context definition.**
+**Phase 1 complete — all 7 specs generated.**
 
-Project is pre-code. Context files have been defined. Next step is scaffolding the project (TanStack Start + Convex init + Clerk setup) before writing any feature specs.
+Ready to begin implementation. Next step: resolve the open questions below, then start spec 001 (scaffold).
 
 ---
 
-## Active Specs
+## Specs
 
-None yet. First spec will cover project scaffolding and the Convex schema.
+| # | Name | Status | Convex Feature |
+|---|------|--------|----------------|
+| 001 | scaffold | ready | Clerk auth integration |
+| 002 | book-entry | ready | query + mutation + live reactivity |
+| 003 | book-search | ready | action (external API) |
+| 004 | shelves | ready | multi-document atomic mutation |
+| 005 | reviews | ready | patch + optional field clearing |
+| 006 | cover-images | ready | file storage |
+| 007 | stale-reader-reminder | ready | scheduled functions (cron) |
 
 ---
 
 ## Risks
 
-- First Convex project — unfamiliarity with Convex-specific patterns (queries, mutations, schema, file storage) may slow early specs
-- TanStack Start is relatively new; SSR + Convex integration may have rough edges
-- Clerk + Convex integration requires correct JWT template setup in Clerk dashboard
+- TanStack Start + Convex integration: relatively new combination; provider ordering is important (see spec 001 architecture)
+- Clerk JWT template setup is a manual step in the dashboard — easy to misconfigure
+- Convex mutation time budget: spec 004 `deleteShelf` and spec 007 `markStaleEntries` do full scans — fine at learning scale, documented in each spec
 
 ---
 
 ## Open Questions
 
-- [ ] CSS / component library choice (Tailwind + shadcn/ui recommended but not decided)
-- [ ] Book search API: Google Books API vs. Open Library vs. both
-- [ ] Shelf cardinality: can a Book Entry belong to multiple shelves, or exactly one? (current assumption: zero or one)
-- [ ] Cover image strategy: always use API URL, or upload to Convex storage? (likely: API URL by default, optional upload later)
-- [ ] Cron job purpose: reading reminder? weekly stats? (to be decided when reaching that spec)
+- [ ] CSS / component library: Tailwind + shadcn/ui recommended — decide before starting spec 001 frontend work
+- [ ] Book search API: Google Books API chosen (spec 003) — confirm no API key needed or obtain one
+- [ ] Spec 004 shelf cardinality: **decided — one shelf per entry** (field on `book_entries`)
+- [ ] Spec 007 cron job purpose: **decided — stale reading reminder (30 days)**
