@@ -12,7 +12,7 @@ Ready to begin implementation. Next step: resolve the open questions below, then
 
 | # | Name | Status | Convex Feature |
 |---|------|--------|----------------|
-| 001 | scaffold | ready | Clerk auth integration |
+| 001 | scaffold | **done** | Clerk auth integration |
 | 002 | book-entry | ready | query + mutation + live reactivity |
 | 003 | book-search | ready | action (external API) |
 | 004 | shelves | ready | multi-document atomic mutation |
@@ -32,7 +32,7 @@ Ready to begin implementation. Next step: resolve the open questions below, then
 
 ## Open Questions
 
-- [ ] CSS / component library: Tailwind + shadcn/ui recommended — decide before starting spec 001 frontend work
-- [ ] Book search API: Google Books API chosen (spec 003) — confirm no API key needed or obtain one
+- [x] CSS / component library: **Tailwind + shadcn/ui** — decided
+- [x] Book search API: Google Books API — no API key needed for basic search
 - [ ] Spec 004 shelf cardinality: **decided — one shelf per entry** (field on `book_entries`)
 - [ ] Spec 007 cron job purpose: **decided — stale reading reminder (30 days)**

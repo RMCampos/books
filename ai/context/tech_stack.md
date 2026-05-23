@@ -6,7 +6,7 @@
 |-------|--------|-------|
 | Framework | TanStack Start | React-based, SSR-capable router + server functions |
 | UI library | React 19 | Via TanStack Start |
-| Styling | TBD (Tailwind CSS recommended) | Decision not yet made |
+| Styling | Tailwind CSS + shadcn/ui | Decided |
 | State / data fetching | Convex React hooks | `useQuery`, `useMutation`, `useAction` — no additional data layer |
 
 ## Backend

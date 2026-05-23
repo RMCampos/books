@@ -1,41 +1,60 @@
-# empirical-sdd-ddd-starter
+# Bookshelf
 
-A lightweight starter repository for AI-native engineering workflows using:
+A personal book wishlist app built to learn [Convex](https://convex.dev) deeply.
 
-- Spec-Driven Development (SDD)
-- Document-Driven Development (DDD)
-- Context engineering
-- Role-based AI orchestration
+**Stack**: TanStack Start · Convex · Clerk · Tailwind CSS · shadcn/ui
 
-This repository is intentionally minimal and educational.
+## Getting started
 
-Its purpose is to help engineers:
-- structure AI-assisted projects
-- create reusable context
-- generate incremental specs
-- orchestrate AI workflows
-- build with clarity and consistency
+### Prerequisites
 
-## Recommended Flow
+- Node.js 20+
+- A [Convex](https://convex.dev) account
+- A [Clerk](https://clerk.com) account with a JWT template named `convex`
 
-1. Fill project context
-2. Generate specs
-3. Validate architecture
-4. Orchestrate implementation
-5. Review and iterate
+### Setup
 
-## Philosophy
+```bash
+npm install
 
-AI works significantly better with:
-- structure
-- clear context
-- incremental delivery
-- role separation
-- well-defined specs
+# Start the Convex dev server (writes CONVEX_DEPLOYMENT + VITE_CONVEX_URL to .env.local)
+npx convex dev
 
-This repository is NOT:
-- a framework
-- a platform
-- a production boilerplate
+# In a separate terminal, start the frontend
+npm run dev
+```
 
-It is a lightweight scaffold for AI-native engineering workflows.
+Copy `.env.example` to `.env.local` and fill in:
+
+```
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+VITE_CONVEX_URL=https://...convex.cloud
+CONVEX_DEPLOYMENT=dev:...
+```
+
+## Project structure
+
+```
+convex/       Convex backend (schema, queries, mutations, actions, crons)
+src/
+  routes/     TanStack Start file-based routes
+  integrations/
+    clerk/    ClerkProvider wrapper
+    convex/   ConvexProviderWithClerk wrapper
+ai/           Project context, specs, and AI workflow documentation
+```
+
+## Implementation plan
+
+See `ai/specs/` for the full spec list. Progress is tracked in `ai/context/current_milestone.md`.
+
+| Spec | Feature | Status |
+|------|---------|--------|
+| 001 | Scaffold (auth + Convex wired up) | done |
+| 002 | Core wishlist (Book Entry CRUD) | pending |
+| 003 | Book search via Google Books API | pending |
+| 004 | Shelves (custom collections) | pending |
+| 005 | Ratings and reviews | pending |
+| 006 | Cover image upload (Convex file storage) | pending |
+| 007 | Stale reading reminder (Convex cron) | pending |

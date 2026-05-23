@@ -26,12 +26,12 @@ Without this spec, nothing else can be built. This establishes the full stack: T
 
 ## Acceptance Criteria
 
-- [ ] `npx convex dev` starts without errors and deploys schema
-- [ ] Visiting `/` while signed out redirects to Clerk's hosted sign-in page
-- [ ] After signing in, user sees their name on the dashboard (fetched via Convex query, not directly from Clerk on the client)
-- [ ] Convex dashboard shows the `getCurrentUser` query being called with a valid identity
-- [ ] Sign-out button returns the user to the sign-in page
-- [ ] TypeScript strict mode passes with no errors
+- [x] `npx convex dev` starts without errors and deploys schema
+- [x] Visiting `/` while signed out redirects to Clerk's hosted sign-in page
+- [x] After signing in, user sees their name on the dashboard (fetched via Convex query, not directly from Clerk on the client)
+- [x] Convex dashboard shows the `getCurrentUser` query being called with a valid identity
+- [x] Sign-out button returns the user to the sign-in page
+- [x] TypeScript strict mode passes with no errors
 
 ---
 
@@ -41,14 +41,9 @@ None. This is the first spec.
 
 ---
 
-## Risks
+## Implementation Notes
 
-- Clerk JWT template setup is manual (done in Clerk dashboard); easy to misconfigure
-- TanStack Start SSR + Convex client hydration may require specific provider ordering
-- Convex Clerk integration requires `CLERK_JWT_ISSUER_DOMAIN` set in Convex environment variables
-
----
-
-## Notes
-
-The Convex `getCurrentUser` query intentionally fetches identity from `ctx.auth` on the server rather than reading Clerk's client-side state. This validates the Convex ↔ Clerk JWT integration is working and establishes the correct pattern for all future auth-scoped queries.
+- `@clerk/tanstack-react-start` uses `@clerk/react` (v6) internally — all Clerk imports must use `@clerk/react`, not `@clerk/clerk-react` (v5), to avoid context mismatch
+- `ConvexProviderWithClerk` uses SSR guard (`import.meta.env.SSR`) to avoid `useAuth` being called server-side; falls back to plain `ConvexProvider` during SSR
+- All Convex + auth hooks live in a `Dashboard` sub-component that only mounts client-side, keeping the SSR shell clean
+- `convex/auth.config.ts` sets the Clerk JWT issuer domain for Convex to trust
