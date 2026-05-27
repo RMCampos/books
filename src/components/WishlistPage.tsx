@@ -2,12 +2,14 @@ import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { AddBookForm } from './AddBookForm'
 import { BookEntryCard } from './BookEntryCard'
+import { BookSearch } from './BookSearch'
 
 export function WishlistPage() {
   const entries = useQuery(api.bookEntries.getMyWishlist)
 
   return (
     <div className="mt-8 flex flex-col gap-4">
+      <BookSearch />
       <AddBookForm />
       {entries === undefined ? (
         <p className="text-center text-muted-foreground">Loading…</p>

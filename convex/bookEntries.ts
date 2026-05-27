@@ -26,12 +26,36 @@ export const addBook = mutation({
   args: {
     title: v.string(),
     author: v.string(),
+    googleBooksId: v.optional(v.string()),
+    coverUrl: v.optional(v.string()),
+    isbn: v.optional(v.string()),
+    description: v.optional(v.string()),
   },
-  handler: async (ctx, { title, author }) => {
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity()
     if (!identity) throw new Error('Unauthenticated')
 
-    const bookId = await ctx.db.insert('books', { title, author })
+    // Deduplicate API-sourced books by googleBooksId — manual entries are never deduplicated
+    let bookId
+    if (args.googleBooksId) {
+      const existing = await ctx.db
+        .query('books')
+        .filter((q) => q.eq(q.field('googleBooksId'), args.googleBooksId))
+        .first()
+      bookId = existing
+        ? existing._id
+        : await ctx.db.insert('books', {
+            title: args.title,
+            author: args.author,
+            googleBooksId: args.googleBooksId,
+            coverUrl: args.coverUrl,
+            isbn: args.isbn,
+            description: args.description,
+          })
+    } else {
+      bookId = await ctx.db.insert('books', { title: args.title, author: args.author })
+    }
+
     await ctx.db.insert('book_entries', {
       userId: identity.subject,
       bookId,
