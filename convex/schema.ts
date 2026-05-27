@@ -1,8 +1,13 @@
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
 
-// Spec 004 adds: shelves
 export default defineSchema({
+  shelves: defineTable({
+    userId: v.string(),
+    name: v.string(),
+    createdAt: v.number(),
+  }).index('by_user', ['userId']),
+
   books: defineTable({
     title: v.string(),
     author: v.string(),

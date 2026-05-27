@@ -79,6 +79,20 @@ export const removeBook = mutation({
   },
 })
 
+export const assignToShelf = mutation({
+  args: {
+    entryId: v.id('book_entries'),
+    shelfId: v.optional(v.id('shelves')),
+  },
+  handler: async (ctx, { entryId, shelfId }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    const entry = await ctx.db.get(entryId)
+    if (!entry || entry.userId !== identity.subject) throw new Error('Unauthorized')
+    await ctx.db.patch(entryId, { shelfId })
+  },
+})
+
 export const updateStatus = mutation({
   args: {
     entryId: v.id('book_entries'),

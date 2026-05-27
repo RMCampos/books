@@ -12,17 +12,24 @@ import {
 
 type Status = 'want_to_read' | 'currently_reading' | 'read'
 
+interface Shelf {
+  _id: Id<'shelves'>
+  name: string
+}
+
 interface Props {
   entryId: Id<'book_entries'>
   title: string
   author: string
   status: Status
+  shelfId: Id<'shelves'> | undefined
+  shelves: Shelf[]
 }
 
-
-export function BookEntryCard({ entryId, title, author, status }: Props) {
+export function BookEntryCard({ entryId, title, author, status, shelfId, shelves }: Props) {
   const removeBook = useMutation(api.bookEntries.removeBook)
   const updateStatus = useMutation(api.bookEntries.updateStatus)
+  const assignToShelf = useMutation(api.bookEntries.assignToShelf)
 
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
@@ -32,10 +39,29 @@ export function BookEntryCard({ entryId, title, author, status }: Props) {
       </div>
       <div className="flex shrink-0 items-center gap-2">
         <Select
-          value={status}
+          value={shelfId ?? 'none'}
           onValueChange={(val) =>
-            updateStatus({ entryId, status: val as Status })
+            assignToShelf({
+              entryId,
+              shelfId: val === 'none' ? undefined : (val as Id<'shelves'>),
+            })
           }
+        >
+          <SelectTrigger className="w-36">
+            <SelectValue placeholder="No shelf" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">No shelf</SelectItem>
+            {shelves.map((s) => (
+              <SelectItem key={s._id} value={s._id}>
+                {s.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={status}
+          onValueChange={(val) => updateStatus({ entryId, status: val as Status })}
         >
           <SelectTrigger className="w-44">
             <SelectValue />
