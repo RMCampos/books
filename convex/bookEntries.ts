@@ -79,6 +79,37 @@ export const removeBook = mutation({
   },
 })
 
+export const setRating = mutation({
+  args: {
+    entryId: v.id('book_entries'),
+    rating: v.optional(v.number()),
+  },
+  handler: async (ctx, { entryId, rating }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    const entry = await ctx.db.get(entryId)
+    if (!entry || entry.userId !== identity.subject) throw new Error('Unauthorized')
+    if (rating !== undefined && (rating < 1 || rating > 5 || !Number.isInteger(rating))) {
+      throw new Error('Rating must be an integer between 1 and 5')
+    }
+    await ctx.db.patch(entryId, { rating })
+  },
+})
+
+export const setReview = mutation({
+  args: {
+    entryId: v.id('book_entries'),
+    review: v.optional(v.string()),
+  },
+  handler: async (ctx, { entryId, review }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    const entry = await ctx.db.get(entryId)
+    if (!entry || entry.userId !== identity.subject) throw new Error('Unauthorized')
+    await ctx.db.patch(entryId, { review: review?.trim() || undefined })
+  },
+})
+
 export const assignToShelf = mutation({
   args: {
     entryId: v.id('book_entries'),

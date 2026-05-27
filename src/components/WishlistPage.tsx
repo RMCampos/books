@@ -45,6 +45,8 @@ export function WishlistPage() {
               status={entry.status}
               shelfId={entry.shelfId}
               shelves={shelves}
+              rating={entry.rating}
+              review={entry.review}
             />
           ))}
         </div>
