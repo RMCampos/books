@@ -1,6 +1,53 @@
 import { mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    return await ctx.storage.generateUploadUrl()
+  },
+})
+
+export const setCoverImage = mutation({
+  args: {
+    entryId: v.id('book_entries'),
+    storageId: v.id('_storage'),
+  },
+  handler: async (ctx, { entryId, storageId }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    const entry = await ctx.db.get(entryId)
+    if (!entry || entry.userId !== identity.subject) throw new Error('Unauthorized')
+    if (entry.coverStorageId) {
+      await ctx.storage.delete(entry.coverStorageId)
+    }
+    await ctx.db.patch(entryId, { coverStorageId: storageId })
+  },
+})
+
+export const removeCoverImage = mutation({
+  args: { entryId: v.id('book_entries') },
+  handler: async (ctx, { entryId }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) throw new Error('Unauthenticated')
+    const entry = await ctx.db.get(entryId)
+    if (!entry || entry.userId !== identity.subject) throw new Error('Unauthorized')
+    if (entry.coverStorageId) {
+      await ctx.storage.delete(entry.coverStorageId)
+    }
+    await ctx.db.patch(entryId, { coverStorageId: undefined })
+  },
+})
+
+export const getCoverUrl = query({
+  args: { storageId: v.id('_storage') },
+  handler: async (ctx, { storageId }) => {
+    return await ctx.storage.getUrl(storageId)
+  },
+})
+
 export const getMyWishlist = query({
   args: {},
   handler: async (ctx) => {

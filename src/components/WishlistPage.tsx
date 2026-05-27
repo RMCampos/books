@@ -47,6 +47,8 @@ export function WishlistPage() {
               shelves={shelves}
               rating={entry.rating}
               review={entry.review}
+              coverStorageId={entry.coverStorageId}
+              apiCoverUrl={entry.book?.coverUrl}
             />
           ))}
         </div>
