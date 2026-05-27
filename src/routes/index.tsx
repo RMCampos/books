@@ -3,6 +3,7 @@ import { useConvexAuth, useQuery } from 'convex/react'
 import { RedirectToSignIn, UserButton } from '@clerk/react'
 import { useState, useEffect } from 'react'
 import { api } from '../../convex/_generated/api'
+import { WishlistPage } from '../components/WishlistPage'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -52,9 +53,7 @@ function Dashboard() {
         <p className="mt-2 text-muted-foreground">
           Welcome, {user?.name ?? user?.email ?? 'reader'}.
         </p>
-        <div className="mt-8 rounded-lg border p-6 text-center text-muted-foreground">
-          Your wishlist is empty — adding books comes in the next step.
-        </div>
+        <WishlistPage />
       </div>
     </div>
   )

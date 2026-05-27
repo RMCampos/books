@@ -27,13 +27,13 @@ This is the core domain feature. Everything else (search, shelves, reviews, cove
 
 ## Acceptance Criteria
 
-- [ ] Adding a book (title + author) creates a `books` document and a `book_entries` document
-- [ ] The wishlist query only returns entries where `userId` matches the authenticated Clerk identity
-- [ ] Changing status updates the `book_entries` document and the UI updates without a refresh
-- [ ] `startedAt` is set when status becomes `currently_reading`; `finishedAt` is set when status becomes `read`
-- [ ] Removing a Book Entry deletes only the `book_entries` document (the `books` document is preserved)
-- [ ] Opening two browser tabs: adding/removing in one updates the other in real time
-- [ ] Calling the wishlist query without authentication returns an empty list or throws — never another user's data
+- [x] Adding a book (title + author) creates a `books` document and a `book_entries` document
+- [x] The wishlist query only returns entries where `userId` matches the authenticated Clerk identity
+- [x] Changing status updates the `book_entries` document and the UI updates without a refresh
+- [x] `startedAt` is set when status becomes `currently_reading`; `finishedAt` is set when status becomes `read`
+- [x] Removing a Book Entry deletes only the `book_entries` document (the `books` document is preserved)
+- [x] Opening two browser tabs: adding/removing in one updates the other in real time
+- [x] Calling the wishlist query without authentication returns an empty list or throws — never another user's data
 
 ---
 

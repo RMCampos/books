@@ -13,7 +13,7 @@ Ready to begin implementation. Next step: resolve the open questions below, then
 | # | Name | Status | Convex Feature |
 |---|------|--------|----------------|
 | 001 | scaffold | **done** | Clerk auth integration |
-| 002 | book-entry | ready | query + mutation + live reactivity |
+| 002 | book-entry | **done** | query + mutation + live reactivity |
 | 003 | book-search | ready | action (external API) |
 | 004 | shelves | ready | multi-document atomic mutation |
 | 005 | reviews | ready | patch + optional field clearing |
