@@ -29,7 +29,7 @@ export function AddBookForm() {
     <form onSubmit={handleSubmit} className="rounded-lg border p-4">
       <h2 className="mb-4 font-semibold">Add a book</h2>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col gap-1.5">
           <Label htmlFor="title">Title</Label>
           <Input
             id="title"
@@ -39,7 +39,7 @@ export function AddBookForm() {
             required
           />
         </div>
-        <div className="flex-1">
+        <div className="flex flex-1 flex-col gap-1.5">
           <Label htmlFor="author">Author</Label>
           <Input
             id="author"
