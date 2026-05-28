@@ -2,8 +2,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useConvexAuth, useQuery } from 'convex/react'
 import { RedirectToSignIn, UserButton } from '@clerk/react'
 import { useState, useEffect } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { api } from '../../convex/_generated/api'
 import { WishlistPage } from '../components/WishlistPage'
+import { useDarkMode } from '../hooks/useDarkMode'
+import { Button } from '../components/ui/button'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -25,6 +28,7 @@ function Home() {
 
 // All Convex and Clerk hooks live here — never called during SSR.
 function Dashboard() {
+  const { isDark, toggle } = useDarkMode()
   const { isAuthenticated, isLoading } = useConvexAuth()
   const user = useQuery(
     api.users.getCurrentUser,
@@ -48,7 +52,12 @@ function Dashboard() {
       <div className="mx-auto w-full max-w-5xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Bookshelf</h1>
-          <UserButton />
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode">
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </Button>
+            <UserButton />
+          </div>
         </div>
         <p className="mt-2 text-muted-foreground">
           Welcome, {user?.name ?? user?.email ?? 'reader'}.

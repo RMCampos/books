@@ -36,6 +36,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Runs before paint — applies dark class from localStorage or OS preference to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(s===null&&d)){document.documentElement.classList.add('dark')}})();` }} />
         <HeadContent />
       </head>
       <body>
