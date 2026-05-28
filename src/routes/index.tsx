@@ -45,7 +45,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen p-8">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto w-full max-w-5xl">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Bookshelf</h1>
           <UserButton />

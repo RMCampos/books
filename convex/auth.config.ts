@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://modest-colt-58.clerk.accounts.dev",
+      domain: process.env.CLERK_FRONTEND_API_URL,
       applicationID: "convex",
     },
   ],
