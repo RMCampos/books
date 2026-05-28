@@ -8,9 +8,9 @@ terraform {
 
   backend "s3" {
     bucket                      = "books"
-    key                         = "books/kubernetes/terraform.tfstate"
+    key                         = "kubernetes/terraform.tfstate"
     region                      = "auto"
-    endpoints                   = { s3 = "https://d17eb09b6bce2f90e16e30000bb2a6baf9.r2.cloudflarestorage.com" }
+    endpoints                   = { s3 = "https://d17eb09b6bce2f90e16e800bb2a6baf9.r2.cloudflarestorage.com" }
     skip_credentials_validation = true
     skip_region_validation      = true
     skip_requesting_account_id  = true
