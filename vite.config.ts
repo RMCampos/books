@@ -10,7 +10,7 @@ const config = defineConfig({
   resolve: { tsconfigPaths: true },
   plugins: [devtools(), tailwindcss(), tanstackStart(), viteReact()],
   preview: {
-    allowedHosts: ["books.darkroasted.vps-kinghost.net","https://books.darkroasted.vps-kinghost.net"]
+    allowedHosts: ["books.darkroasted.vps-kinghost.net"]
   }
 })
 
