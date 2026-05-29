@@ -2,14 +2,21 @@ import { action } from './_generated/server'
 import { v } from 'convex/values'
 
 export const searchBooks = action({
-  args: { query: v.string() },
-  handler: async (_ctx, { query }) => {
+  args: { query: v.string(), langRestrict: v.optional(v.string()) },
+  handler: async (_ctx, { query, langRestrict }) => {
     if (!query.trim()) return []
 
     const key = process.env.GOOGLE_BOOKS_API_KEY
     if (!key) throw new Error('GOOGLE_BOOKS_API_KEY env var is not set in Convex')
+    const params = new URLSearchParams({
+      q: query,
+      maxResults: '10',
+      printType: 'books',
+      key,
+    })
+    if (langRestrict) params.set('langRestrict', langRestrict)
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&key=${key}`,
+      `https://www.googleapis.com/books/v1/volumes?${params.toString()}`,
     )
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = (await res.json()) as { items?: any[] }

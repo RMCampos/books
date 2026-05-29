@@ -3,10 +3,20 @@ import { useAction, useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { BookSearchResult, type SearchResult } from './BookSearchResult'
+
+const LANGUAGE_OPTIONS = [
+  { label: 'Default', value: '' },
+  { label: 'Brazilian', value: 'pt' },
+  { label: 'Spanish', value: 'es' },
+  { label: 'German', value: 'de' },
+  { label: 'French', value: 'fr' },
+]
 
 export function BookSearch() {
   const [query, setQuery] = useState('')
+  const [lang, setLang] = useState('')
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [addingId, setAddingId] = useState<string | null>(null)
@@ -26,7 +36,7 @@ export function BookSearch() {
     setIsSearching(true)
     setSearchError(null)
     try {
-      const found = await searchBooks({ query })
+      const found = await searchBooks({ query, ...(lang ? { langRestrict: lang } : {}) })
       setResults(found as SearchResult[])
     } catch (err) {
       console.error('searchBooks failed:', err)
@@ -68,6 +78,18 @@ export function BookSearch() {
           placeholder="Title or author…"
           className="flex-1"
         />
+        <Select value={lang} onValueChange={setLang}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="Language" />
+          </SelectTrigger>
+          <SelectContent>
+            {LANGUAGE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button type="submit" disabled={isSearching || !query.trim()}>
           {isSearching ? 'Searching…' : 'Search'}
         </Button>
