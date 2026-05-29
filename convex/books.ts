@@ -18,11 +18,12 @@ export const searchBooks = action({
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?${params.toString()}`,
     )
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data = (await res.json()) as { items?: any[] }
+    const text = await res.text()
     if (!res.ok) {
-      throw new Error(`Google Books API error: ${res.status}`)
+      throw new Error(`Google Books API error ${res.status}: ${text}`)
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = JSON.parse(text) as { items?: any[] }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data.items ?? []).map((item: any) => ({
