@@ -52,9 +52,9 @@ See `ai/specs/` for the full spec list. Progress is tracked in `ai/context/curre
 | Spec | Feature | Status |
 |------|---------|--------|
 | 001 | Scaffold (auth + Convex wired up) | done |
-| 002 | Core wishlist (Book Entry CRUD) | pending |
-| 003 | Book search via Google Books API | pending |
-| 004 | Shelves (custom collections) | pending |
-| 005 | Ratings and reviews | pending |
-| 006 | Cover image upload (Convex file storage) | pending |
+| 002 | Core wishlist (Book Entry CRUD) | done |
+| 003 | Book search via Google Books API | done |
+| 004 | Shelves (custom collections) | done |
+| 005 | Ratings and reviews | done |
+| 006 | Cover image upload (Convex file storage) | done |
 | 007 | Stale reading reminder (Convex cron) | pending |
