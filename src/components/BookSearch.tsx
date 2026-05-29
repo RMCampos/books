@@ -1,10 +1,20 @@
 import { useState } from 'react'
 import { useAction, useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
+import { InfoIcon } from 'lucide-react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { BookSearchResult, type SearchResult } from './BookSearchResult'
+
+const SEARCH_OPERATORS = [
+  { op: 'isbn:', example: 'isbn:9780743273565', desc: 'Search by ISBN-10 or ISBN-13' },
+  { op: 'intitle:', example: 'intitle:gatsby', desc: 'Match words in the title' },
+  { op: 'inauthor:', example: 'inauthor:fitzgerald', desc: 'Match words in the author name' },
+  { op: 'inpublisher:', example: 'inpublisher:scribner', desc: 'Match by publisher' },
+  { op: 'subject:', example: 'subject:fiction', desc: 'Filter by subject or genre' },
+]
 
 const LANGUAGE_OPTIONS = [
   { label: 'Default', value: 'default' },
@@ -66,18 +76,42 @@ export function BookSearch() {
     <div className="rounded-lg border p-4">
       <h2 className="mb-4 font-semibold">Search for a book</h2>
       <form onSubmit={handleSearch} className="flex gap-2">
-        <Input
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value)
-            if (!e.target.value) {
-              setResults(null)
-              setSearchError(null)
-            }
-          }}
-          placeholder="Title or author…"
-          className="flex-1"
-        />
+        <div className="relative flex flex-1 items-center">
+          <Input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value)
+              if (!e.target.value) {
+                setResults(null)
+                setSearchError(null)
+              }
+            }}
+            placeholder="Title, author, isbn:…"
+            className="flex-1 pr-8"
+          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="absolute right-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Search tips"
+              >
+                <InfoIcon className="size-4" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-80">
+              <p className="mb-2 text-sm font-medium">Search operators</p>
+              <ul className="flex flex-col gap-2">
+                {SEARCH_OPERATORS.map(({ op, example, desc }) => (
+                  <li key={op} className="flex flex-col gap-0.5">
+                    <code className="text-xs font-semibold text-foreground">{example}</code>
+                    <span className="text-xs text-muted-foreground">{desc}</span>
+                  </li>
+                ))}
+              </ul>
+            </PopoverContent>
+          </Popover>
+        </div>
         <Select value={lang} onValueChange={setLang}>
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Language" />
