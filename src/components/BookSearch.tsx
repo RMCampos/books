@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { BookSearchResult, type SearchResult } from './BookSearchResult'
 
 const LANGUAGE_OPTIONS = [
-  { label: 'Default', value: '' },
+  { label: 'Default', value: 'default' },
   { label: 'Brazilian', value: 'pt' },
   { label: 'Spanish', value: 'es' },
   { label: 'German', value: 'de' },
@@ -16,7 +16,7 @@ const LANGUAGE_OPTIONS = [
 
 export function BookSearch() {
   const [query, setQuery] = useState('')
-  const [lang, setLang] = useState('')
+  const [lang, setLang] = useState('default')
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [addingId, setAddingId] = useState<string | null>(null)
@@ -36,7 +36,7 @@ export function BookSearch() {
     setIsSearching(true)
     setSearchError(null)
     try {
-      const found = await searchBooks({ query, ...(lang ? { langRestrict: lang } : {}) })
+      const found = await searchBooks({ query, ...(lang !== 'default' ? { langRestrict: lang } : {}) })
       setResults(found as SearchResult[])
     } catch (err) {
       console.error('searchBooks failed:', err)
