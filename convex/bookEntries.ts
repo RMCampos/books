@@ -60,11 +60,15 @@ export const getMyWishlist = query({
       .withIndex('by_user', (q) => q.eq('userId', identity.subject))
       .collect()
 
-    return Promise.all(
+    const results = await Promise.all(
       entries.map(async (entry) => ({
         ...entry,
         book: await ctx.db.get(entry.bookId),
       })),
+    )
+
+    return results.sort((a, b) =>
+      (a.book?.title ?? '').localeCompare(b.book?.title ?? ''),
     )
   },
 })
