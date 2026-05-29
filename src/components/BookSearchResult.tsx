@@ -1,4 +1,5 @@
 import { Button } from './ui/button'
+import { CoverViewer } from './CoverViewer'
 
 export type SearchResult = {
   googleBooksId: string
@@ -19,15 +20,12 @@ interface Props {
 export function BookSearchResult({ result, alreadyInWishlist, onAdd, isAdding }: Props) {
   return (
     <div className="flex gap-3 rounded-lg border p-3">
-      {result.coverUrl ? (
-        <img
-          src={result.coverUrl}
-          alt={result.title}
-          className="h-20 w-14 shrink-0 rounded object-cover"
-        />
-      ) : (
-        <div className="h-20 w-14 shrink-0 rounded bg-muted" />
-      )}
+      <CoverViewer
+        src={result.coverUrl}
+        alt={result.title}
+        className="h-20 w-14 rounded object-cover"
+        placeholderClassName="h-20 w-14 shrink-0 rounded bg-muted"
+      />
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-1">
         <div>
           <p className="font-medium leading-tight">{result.title}</p>

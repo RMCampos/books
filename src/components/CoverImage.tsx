@@ -1,6 +1,7 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
+import { CoverViewer } from './CoverViewer'
 
 interface Props {
   coverStorageId: Id<'_storage'> | undefined
@@ -16,13 +17,5 @@ export function CoverImage({ coverStorageId, apiCoverUrl, alt }: Props) {
 
   const src = coverStorageId !== undefined ? (storageUrl ?? undefined) : apiCoverUrl
 
-  if (!src) {
-    return (
-      <div className="flex h-24 w-16 shrink-0 items-center justify-center rounded bg-muted text-2xl text-muted-foreground/40">
-        📚
-      </div>
-    )
-  }
-
-  return <img src={src} alt={alt} className="h-24 w-16 shrink-0 rounded object-cover" />
+  return <CoverViewer src={src} alt={alt} />
 }
