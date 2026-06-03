@@ -138,7 +138,7 @@ jobs:
           name: tfplan
           path: terraform
 
-     - name: Setup Doppler CLI
+      - name: Setup Doppler CLI
         uses: dopplerhq/cli-action@v4
 
       - name: Setup Kubeconfig
