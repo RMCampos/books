@@ -58,5 +58,4 @@ jobs:
           echo "CLERK_SIGN_UP_URL=${{ env.CLERK_SIGN_UP_URL }}" >> .env.local
           echo "CONVEX_URL=${{ env.CONVEX_URL }}" >> .env.local
           doppler secrets download --no-file --format env --config prd_secrets >> .env.local
-          npx convex deploy --prod
-
+          npx convex deploy
