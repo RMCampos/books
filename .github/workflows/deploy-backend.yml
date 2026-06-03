@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      CLERK_PUBLISHABLE_KEY: ""
+      CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: ""
+      CLERK_SIGN_IN_URL: ""
+      CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: ""
+      CLERK_SIGN_UP_URL: ""
+      CONVEX_URL: ""
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -29,11 +36,27 @@ jobs:
       - name: Setup Doppler CLI
         uses: dopplerhq/cli-action@v4
 
+      - name: Fetch secrets from Doppler
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_TOKENS }}
+        run: |
+          doppler secrets download \
+            --no-file \
+            --format env \
+            --project polpa-gestao \
+            --config prd_tokens \
+            | sed 's/"//g' >> $GITHUB_ENV
+
       - name: Setup Convex Prod
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
         run: |
-          doppler secrets download --no-file --format env --config prd_tokens > .env.local
+          echo "CLERK_PUBLISHABLE_KEY=${{ env.CLERK_PUBLISHABLE_KEY }}" > .env.local
+          echo "CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=${{ env.CLERK_SIGN_IN_FALLBACK_REDIRECT_URL }}" >> .env.local
+          echo "CLERK_SIGN_IN_URL=${{ env.CLERK_SIGN_IN_URL }}" >> .env.local
+          echo "CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=${{ env.CLERK_SIGN_UP_FALLBACK_REDIRECT_URL }}" >> .env.local
+          echo "CLERK_SIGN_UP_URL=${{ env.CLERK_SIGN_UP_URL }}" >> .env.local
+          echo "CONVEX_URL=${{ env.CONVEX_URL }}" >> .env.local
           doppler secrets download --no-file --format env --config prd_secrets >> .env.local
           npx convex deploy --prod
 
