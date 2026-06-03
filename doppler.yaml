@@ -1,0 +1,3 @@
+setup:
+  project: books
+  config: dev_secrets

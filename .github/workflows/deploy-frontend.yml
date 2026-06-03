@@ -1,4 +1,4 @@
-name: Deploy to prod
+name: Deploy Frontend to Prod
 
 on:
   workflow_dispatch:
@@ -22,6 +22,9 @@ jobs:
       no_changes: ${{ steps.check-changes.outputs.no_changes }}
     permissions:
       contents: read
+    env:
+      CONVEX_URL: ""
+      CLERK_PUBLISHABLE_KEY: ""
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -34,11 +37,16 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
+      - name: Setup Doppler CLI
+        uses: dopplerhq/cli-action@v4
+
       - name: Setup Kubeconfig
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
+          doppler run --config prd_secrets -- bash -c 'echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config'
+          chmod 600 ~/.kube/config 
 
       - name: Validate cluster access
         run: |
@@ -68,24 +76,27 @@ jobs:
       - name: Terraform Init
         working-directory: terraform
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-        run: terraform init -input=false
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
+        run: doppler run --config prd_secrets -- terraform init -input=false 
 
       - name: Terraform Validate
         working-directory: terraform
         run: terraform validate
 
+      - name: Fetch public tokens
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_TOKENS }}
+        run: |
+          doppler secrets download --no-file --format env \
+            --config prd_tokens | sed 's/"//g' >> $GITHUB_ENV
+
       - name: Terraform Plan
         id: check-changes
         working-directory: terraform
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: |
           timeout 1m terraform plan -input=false -out=tfplan \
-            -var="convex_url=${{ secrets.VITE_CONVEX_URL }}" \
-            -var="clerk_publishable_key=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}" \
+            -var="convex_url=${{ env.CONVEX_URL }}" \
+            -var="clerk_publishable_key=${{ env.CLERK_PUBLISHABLE_KEY }}" \
             -var="frontend_image=${{ steps.deploy-vars.outputs.frontend_image }}"
           terraform show -json tfplan > tfplan.json
           if jq -e '.resource_changes | length == 0' tfplan.json >/dev/null; then
@@ -127,22 +138,26 @@ jobs:
           name: tfplan
           path: terraform
 
+     - name: Setup Doppler CLI
+        uses: dopplerhq/cli-action@v4
+
       - name: Setup Kubeconfig
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
+          doppler run --config prd_secrets -- bash -c 'echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config'
+          chmod 600 ~/.kube/config 
 
       - name: Terraform Init
         working-directory: terraform
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-        run: terraform init -input=false
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
+        run: doppler run --config prd_secrets -- terraform init -input=false
 
       - name: Terraform Apply
         working-directory: terraform
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-        run: timeout 1m terraform apply tfplan
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
+        run: doppler run --config prd_secrets -- timeout 1m terraform apply tfplan
+

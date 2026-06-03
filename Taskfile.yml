@@ -1,0 +1,37 @@
+# https://taskfile.dev
+
+version: '3'
+
+silent: true
+
+tasks:
+  build-frontend:
+    desc: Build the books convex app with Docker
+    cmd: |
+      export $(doppler secrets download --no-file --format env --config dev_tokens | sed 's/"//g' | xargs) && \
+      docker build \
+        --build-arg VITE_CONVEX_URL="$CONVEX_URL" \
+        --build-arg VITE_CLERK_PUBLISHABLE_KEY="$CLERK_PUBLISHABLE_KEY" \
+        -t ghcr.io/rmcampos/books/app:latest .
+
+  dev-run:
+    desc: Run the books convex app locally for development
+    defer: rm -rf .env.local
+    cmd: |
+      doppler secrets download --no-file --format env --config dev_tokens > .env.local
+      doppler secrets download --no-file --format env --config dev_secrets >> .env.local
+      trap "rm -f .env.local" EXIT
+      npx convex dev
+    vars:
+      SHELL: bash
+
+  prod-deploy:
+    desc: Deploy the books convex app for prod
+    defer: rm -rf .env.local
+    cmd: |
+      doppler secrets download --no-file --format env --config prd_tokens > .env.local
+      doppler secrets download --no-file --format env --config prd_secrets >> .env.local
+      trap "rm -f .env.local" EXIT
+      npx convex deploy
+    vars:
+      SHELL: bash
