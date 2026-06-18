@@ -93,8 +93,11 @@ jobs:
       - name: Terraform Plan
         id: check-changes
         working-directory: terraform
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_AT_SECRETS }}
         run: |
-          timeout 1m terraform plan -input=false -out=tfplan \
+          doppler run --config prd_secrets -- \
+            timeout 1m terraform plan -input=false -out=tfplan \
             -var="convex_url=${{ env.CONVEX_URL }}" \
             -var="clerk_publishable_key=${{ env.CLERK_PUBLISHABLE_KEY }}" \
             -var="frontend_image=${{ steps.deploy-vars.outputs.frontend_image }}"
