@@ -1,3 +1,7 @@
+# Archived repo
+
+The new content can be found in Gitea: https://lightroasted.vps-kinghost.net/rmcampos/books
+
 # Bookshelf
 
 A personal book wishlist app built to learn [Convex](https://convex.dev) deeply.
