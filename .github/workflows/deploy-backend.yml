@@ -9,7 +9,7 @@ on:
 jobs:
   deploy-convex:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: easynode-debian
     permissions:
       contents: read
     env:
@@ -21,14 +21,15 @@ jobs:
       CONVEX_URL: ""
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v4
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
         with:
-          node-version: 22.x
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm- 
 
       - name: Install dependencies
         run: npm ci
@@ -59,3 +60,4 @@ jobs:
           echo "CONVEX_URL=${{ env.CONVEX_URL }}" >> .env.local
           doppler secrets download --no-file --format env --config prd_secrets >> .env.local
           npx convex deploy
+

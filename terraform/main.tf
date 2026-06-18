@@ -35,7 +35,7 @@ variable "clerk_publishable_key" {
 
 variable "frontend_image" {
   type    = string
-  default = "ghcr.io/rmcampos/books/app:latest"
+  default = "docker.io/rmcampos/books:latest"
 }
 
 resource "kubernetes_namespace_v1" "books" {

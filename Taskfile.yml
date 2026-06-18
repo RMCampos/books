@@ -12,7 +12,7 @@ tasks:
       docker build \
         --build-arg VITE_CONVEX_URL="$CONVEX_URL" \
         --build-arg VITE_CLERK_PUBLISHABLE_KEY="$CLERK_PUBLISHABLE_KEY" \
-        -t ghcr.io/rmcampos/books/app:latest .
+        -t docker.io/rmcampos/books:latest .
 
   dev-run:
     desc: Run the books convex app locally for development
