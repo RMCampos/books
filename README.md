@@ -1,5 +1,8 @@
 # Bookshelf
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Frontend Build](https://lightroasted.vps-kinghost.net/rmcampos/books/actions/workflows/frontend-cd.yml/badge.svg)](https://lightroasted.vps-kinghost.net/rmcampos/books/actions/?workflow=frontend-cd.yml)
+
 A personal book wishlist app built to learn [Convex](https://convex.dev) deeply.
 
 **Stack**: TanStack Start · Convex · Clerk · Tailwind CSS · shadcn/ui
